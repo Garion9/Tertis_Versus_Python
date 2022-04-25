@@ -5,9 +5,7 @@ import binascii
 HOST = socket.gethostbyname(socket.gethostname())
 
 s = socket.socket(socket.PF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
-# s.bind((HOST, 10000))
-# s.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
-# s.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
+
 
 while True:
     packet = s.recvfrom(2048)
