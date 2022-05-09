@@ -17,10 +17,10 @@ def main():
     ip_address_remote = input("Enter remote IPv6 address: ")
     ip_address_remote = standardize_ipv6_format(ip_address_remote)
 
-    mac_address_local_bytes = binascii.unhexlify(mac_address_local.replace(':', ''))
-    ip_address_local_bytes = socket.inet_pton(socket.AF_INET6, ip_address_local)
-    mac_address_remote_bytes = binascii.unhexlify(mac_address_remote.replace(':', ''))
-    ip_address_remote_bytes = socket.inet_pton(socket.AF_INET6, ip_address_remote)
+    # mac_address_local_bytes = binascii.unhexlify(mac_address_local.replace(':', ''))
+    # ip_address_local_bytes = socket.inet_pton(socket.AF_INET6, ip_address_local)
+    # mac_address_remote_bytes = binascii.unhexlify(mac_address_remote.replace(':', ''))
+    # ip_address_remote_bytes = socket.inet_pton(socket.AF_INET6, ip_address_remote)
 
     s = socket.socket(socket.PF_PACKET, socket.SOCK_RAW, socket.ntohs(0x0003))
 
