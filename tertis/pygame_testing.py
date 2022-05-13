@@ -12,6 +12,7 @@ import threading
 
 class ReceiverThread(threading.Thread):
     def __init__(self, interface_name, mac_address_remote, ip_address_remote, remote_positions):
+        super().__init__()
         self.interface_name = interface_name
         self.mac_address_local = netifaces.ifaddresses(self.interface_name)[netifaces.AF_PACKET][0]['addr']
         self.ip_address_local = netifaces.ifaddresses(self.interface_name)[netifaces.AF_INET6][0]['addr']
@@ -37,8 +38,12 @@ class ReceiverThread(threading.Thread):
 
                 updated_coordinates = str(packet[0][54:], 'utf-8').split(":")
 
-                self.remote_positions["x"], self.remote_positions["y"] = updated_coordinates[1], updated_coordinates[3]
+                self.remote_positions["x"], self.remote_positions["y"] = int(updated_coordinates[1]), int(updated_coordinates[3])
 
+
+
+    def get_positions(self):
+        return self.remote_positions
 
 def main():
     interface_name = input("Enter network interface name: ")
@@ -142,7 +147,9 @@ def main():
 
         pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(x_pos, y_pos, side_length, side_length))
 
-        pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(remote_positions.get("x"), remote_positions.get("y"), side_length, side_length))
+        remote_positions = receiverThread.get_positions()
+
+        pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(remote_positions.get("x") + x_upper_bound, remote_positions.get("y") + y_lower_bound, side_length, side_length))
 
         pygame.draw.line(screen, (0, 0, 0), (x_upper_bound, y_lower_bound), (x_upper_bound, y_upper_bound), 1)
 
