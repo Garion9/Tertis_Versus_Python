@@ -26,6 +26,4 @@ def calculate_checksum(ip_pseudo_header: bytes):
     checksum = (checksum >> 16) + (checksum & 0xFFFF)
     checksum = ~checksum & 0xFFFF
 
-    print(hex(checksum).lstrip("0x").rstrip("L"))
-
     return binascii.unhexlify(hex(checksum).lstrip("0x").rstrip("L"))
