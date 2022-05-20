@@ -75,7 +75,6 @@ class Sender:
 
 
 def main():
-    print(netifaces.interfaces())
     interface_name = input("Enter network interface name: ")
     mac_address_remote = input("Enter remote MAC address: ")
     ip_address_remote = input("Enter remote IPv6 address: ")
