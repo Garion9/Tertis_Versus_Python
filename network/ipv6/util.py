@@ -2,6 +2,14 @@ import binascii
 
 
 def standardize_ipv6_format(ipv6_address: str):
+    """
+    Function used to standardize IPv6 format by expanding the shortened form of address by filling it back with zeroes.
+
+    Parameters:
+        ipv6_address (str): IPv6 address in either full or shortened form
+    Returns:
+        string containing full form of IPv6 address given as parameter
+    """
     segments_count = 8
     ipv6_address = ipv6_address.split("%")[0]
     zeros_index = ipv6_address.find("::")
@@ -15,6 +23,15 @@ def standardize_ipv6_format(ipv6_address: str):
 
 
 def calculate_checksum(ip_pseudo_header: bytes):
+    """
+    UDP checksum is calculated as 16-bit one's complement pf the one's complement sum of
+    pseudo-header bytes (padded with zeroes at the end in order to make a multiple of two octets)
+
+    Parameters:
+        ip_pseudo_header (bytes): ipv6-pseudo-header in the form of a byte array
+    Returns:
+        UDP checksum as a 16-bit long byte array
+    """
     checksum = 0
 
     for i in range(0, len(ip_pseudo_header), 2):
