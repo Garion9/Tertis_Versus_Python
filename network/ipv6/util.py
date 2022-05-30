@@ -24,7 +24,7 @@ def standardize_ipv6_format(ipv6_address: str):
 
 def calculate_checksum(ip_pseudo_header: bytes):
     """
-    UDP checksum is calculated as 16-bit one's complement pf the one's complement sum of
+    UDP checksum is calculated as 16-bit one's complement of the one's complement sum of
     pseudo-header bytes (padded with zeroes at the end in order to make a multiple of two octets)
 
     Parameters:
