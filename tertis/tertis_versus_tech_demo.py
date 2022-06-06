@@ -1,11 +1,14 @@
 import pygame
 import threading
+import platform
 
 from typing import Tuple, Union
 from pygame.surface import Surface, SurfaceType
 
 from network.ipv6.sender import Sender
+from network.ipv6.sender_udp import SenderUdp
 from network.ipv6.receiver import Receiver
+from network.ipv6.receiver_udp import ReceiverUdp
 
 
 class Colours:
@@ -74,13 +77,22 @@ class ReceiverThread(threading.Thread):
 
         self.opponent_position = opponent_position
 
-        def update_opponent_positions(packet):
-            payload = str(packet[62:-4], 'utf-8')
-            position_updates = payload.split(":")
-            self.opponent_position.x = int(position_updates[1]) + game_board.x_upper_bound
-            self.opponent_position.y = int(position_updates[3])
+        if platform.system() == "Linux":
+            def update_opponent_positions(packet):
+                payload = str(packet[62:-4], 'utf-8')
+                position_updates = payload.split(":")
+                self.opponent_position.x = int(position_updates[1]) + game_board.x_upper_bound
+                self.opponent_position.y = int(position_updates[3])
 
-        self.network_receiver = Receiver(interface_name, mac_address_remote, ip_address_remote, update_opponent_positions)
+            self.network_receiver = Receiver(interface_name, mac_address_remote, ip_address_remote, update_opponent_positions)
+        elif platform.system() == "Windows":
+            def update_opponent_positions(data, address):
+                payload = str(data, 'utf-8')
+                position_updates = payload.split(":")
+                self.opponent_position.x = int(position_updates[1]) + game_board.x_upper_bound
+                self.opponent_position.y = int(position_updates[3])
+
+            self.network_receiver = ReceiverUdp(update_opponent_positions)
 
     def run(self):
         self.network_receiver.receive()
@@ -90,7 +102,11 @@ def main():
     interface_name = input("Enter network interface name: ")
     mac_address_remote = input("Enter remote MAC address: ")
     ip_address_remote = input("Enter remote IPv6 address: ")
-    network_sender = Sender(interface_name, mac_address_remote, ip_address_remote)
+
+    if platform.system() == "Linux":
+        network_sender = Sender(interface_name, mac_address_remote, ip_address_remote)
+    elif platform.system() == "Windows":
+        network_sender = SenderUdp(ip_address_remote)
 
     pygame.init()
 
